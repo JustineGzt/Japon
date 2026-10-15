@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../assets/japon/logo.png'
+import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 
 const links = [
   { label: 'UNISEXE', to: '/unisexe' },
@@ -10,6 +12,9 @@ const links = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const { totalQuantity } = useCart()
+  const { user } = useAuth()
+  const accountPath = user ? '/compte' : '/connexion'
 
   return (
     <header className="bg-[#7a1b22] text-white">
@@ -58,7 +63,7 @@ export default function Navbar() {
             </svg>
           </button>
 
-          <button type="button" aria-label="Mon compte" className="hidden md:block">
+          <Link to={accountPath} aria-label="Mon compte" className="hidden md:block">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -70,9 +75,9 @@ export default function Navbar() {
               <circle cx="12" cy="8" r="4" />
               <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" strokeLinecap="round" />
             </svg>
-          </button>
+          </Link>
 
-          <button type="button" aria-label="Panier" className="relative">
+          <Link to="/panier" aria-label={`Panier (${totalQuantity} article${totalQuantity > 1 ? 's' : ''})`} className="relative">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -87,9 +92,9 @@ export default function Navbar() {
               <circle cx="17" cy="19" r="1.5" />
             </svg>
             <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-[#7a1b22]">
-              0
+              {totalQuantity}
             </span>
-          </button>
+          </Link>
 
           <button
             type="button"
@@ -127,9 +132,9 @@ export default function Navbar() {
               className="w-full bg-transparent text-sm text-gray-700 placeholder-gray-500 outline-none"
             />
           </div>
-          <a href="#" className="mt-1 rounded px-2 py-2 hover:bg-white/10">
+          <Link to={accountPath} className="mt-1 rounded px-2 py-2 hover:bg-white/10">
             Mon compte
-          </a>
+          </Link>
         </nav>
       )}
     </header>

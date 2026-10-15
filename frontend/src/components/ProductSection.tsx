@@ -1,11 +1,14 @@
+import { Link } from 'react-router-dom'
 import section2 from '../assets/japon/section2.jpg'
-import { products } from '../data/products'
+import { catalogProducts as products } from '../data/products'
 
 type Product = {
+  slug: string
   name: string
   note?: string
   art: 'tshirt' | 'jacket' | 'tote' | 'photo'
   photo?: string
+  price: string
 }
 
 const columns: { label: string; products: Product[] }[] = Array.from(
@@ -14,7 +17,7 @@ const columns: { label: string; products: Product[] }[] = Array.from(
   label,
   products: products
     .filter((p) => p.collection === label)
-    .map((p) => ({ name: p.name, note: p.note, art: 'photo' as const, photo: p.photo })),
+    .map((p) => ({ slug: p.slug, name: p.name, note: p.note, art: 'photo' as const, photo: p.photo, price: p.price })),
 }))
 
 function DragonArt() {
@@ -141,7 +144,11 @@ export default function ProductSection() {
                 const product = col.products[row]
                 const isDark = product.art === 'jacket'
                 return (
-                  <div key={`${col.label}-${row}`} className="mx-auto flex w-full max-w-xs flex-col items-center sm:max-w-none">
+                  <Link
+                    key={`${col.label}-${row}`}
+                    to={`/produit/${product.slug}`}
+                    className="mx-auto flex w-full max-w-xs flex-col items-center transition-transform hover:-translate-y-1 sm:max-w-none"
+                  >
                     <div
                       className={`aspect-square w-full rounded-2xl border-[3px] p-5 shadow-[0_18px_34px_-14px_rgba(0,0,0,0.55)] sm:p-6 ${
                         isDark
@@ -167,7 +174,7 @@ export default function ProductSection() {
                       )}
                       <p className="mt-1 text-lg font-black text-amber-300 sm:text-xl md:text-2xl">{product.price}</p>
                     </div>
-                  </div>
+                  </Link>
                 )
               })}
             </>
